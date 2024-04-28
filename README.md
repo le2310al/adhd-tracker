@@ -1,1 +1,1 @@
-# adhd-med-tracker
+# ADHD Medication and Symptom Tracker
