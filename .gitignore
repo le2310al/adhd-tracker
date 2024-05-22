@@ -90,3 +90,7 @@ fastlane/test_output
 iOSInjectionProject/
 
 node_modules/
+
+# Private
+Report/Forms
+Resources/
