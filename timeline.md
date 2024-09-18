@@ -1,7 +1,7 @@
 # Timeline
 
 START: 10 September 2024
-SUBMISSION: 10 December 2024
+SUBMISSION: 5 December 2024
 SUBMIT TO ALEX: 25 NOV
 MVP: 30 SEPT -> second design
 

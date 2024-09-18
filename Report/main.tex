@@ -24,6 +24,10 @@
 \usepackage{tikz}
 \usepackage{tocloft}
 \usetikzlibrary{decorations.markings}
+\usepackage{enumitem}
+\usepackage{csquotes}
+\hyphenpenalty=10000
+\exhyphenpenalty=10000
 
 \newcommand{\dhorline}[3][0]{
     \tikz[baseline]{\path[decoration={markings,
@@ -93,14 +97,6 @@
    \setcounter{tocdepth}{3}
    \tableofcontents
    \addtocontents{toc}{\par\nobreak\mbox{}\hfill{\bf Page}\par\nobreak}
-   \clearpage
-
-   \listoftables
-   \addtocontents{lot}{\par\nobreak\textbf{{\scshape Table} \hfill Page}\par\nobreak}
-   \clearpage
-
-   \listoffigures
-   \addtocontents{lof}{\par\nobreak\textbf{{\scshape Figure} \hfill Page}\par\nobreak}
    \clearpage
 
    \pagenumbering{arabic}
