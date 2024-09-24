@@ -1,4 +1,4 @@
-package com.le2310al.adhdtracker.theme
+package com.le2310al.adhdtracker.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -95,6 +95,7 @@ fun AdhdTrackerTheme(
             DarkColorScheme
         }
     MaterialTheme(
+        typography = AdhdTypography,
         colorScheme = colorScheme,
         content = content
     )
