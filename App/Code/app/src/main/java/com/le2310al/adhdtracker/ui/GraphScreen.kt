@@ -3,10 +3,8 @@ package com.le2310al.adhdtracker.ui
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import com.le2310al.adhdtracker.Home
-import androidx.compose.material.icons.filled.Settings
+import com.le2310al.adhdtracker.ui.theme.Settings_heart
+import com.le2310al.adhdtracker.ui.theme.Arrow_back
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -42,7 +40,7 @@ fun GraphScreen (
                 navigationIcon = {
                     IconButton(onClick = {navController.popBackStack()}) {
                         Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            Arrow_back,
                             contentDescription = "Localized description"
                         )
                     }
@@ -50,7 +48,7 @@ fun GraphScreen (
                 actions = {
                     IconButton(onClick = { navController.navigate(Settings) }) {
                         Icon(
-                            imageVector = Icons.Filled.Settings,
+                            Settings_heart,
                             contentDescription = "Localized description"
                         )
                     }

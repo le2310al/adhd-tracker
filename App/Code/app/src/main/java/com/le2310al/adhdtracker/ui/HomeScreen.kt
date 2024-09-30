@@ -10,13 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.*
-/*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.BottomAppBarDefaults
 import androidx.compose.material3.ButtonDefaults
@@ -30,16 +23,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Label
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
-import androidx.compose.material3.SliderDefaults
-import androidx.compose.material3.SliderState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
-
- */
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -59,11 +47,19 @@ import com.le2310al.adhdtracker.Diary
 import com.le2310al.adhdtracker.Graph
 import com.le2310al.adhdtracker.Home
 import com.le2310al.adhdtracker.Settings
+import com.le2310al.adhdtracker.ui.theme.Arrow_back
+import com.le2310al.adhdtracker.ui.theme.Calendar_month
+import com.le2310al.adhdtracker.ui.theme.Edit_document
+import com.le2310al.adhdtracker.ui.theme.Family_home
+import com.le2310al.adhdtracker.ui.theme.Query_stats
+import com.le2310al.adhdtracker.ui.theme.Schedule
+import com.le2310al.adhdtracker.ui.theme.Settings_heart
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
+import java.util.Locale
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen (
     navController : NavHostController
@@ -78,27 +74,20 @@ fun HomeScreen (
                         titleContentColor = MaterialTheme.colorScheme.primary,
                     ),
                     title = {
-                        val sdf =  SimpleDateFormat("dd MMM HH:mm").format(Date())
                         Text(
-                            sdf,
+                            SimpleDateFormat("dd MMM HH:mm", Locale.UK).format(Date()).toString(),
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis
                         )
                     },
                     navigationIcon = {
                         IconButton(onClick = {navController.popBackStack()}) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = "Localized description"
-                            )
+                            Icon(imageVector = Arrow_back, contentDescription = "Localized description")
                         }
                     },
                     actions = {
                         IconButton(onClick = { navController.navigate(Settings) }) {
-                            Icon(
-                                imageVector = Icons.Filled.Settings,
-                                contentDescription = "Localized description"
-                            )
+                            Icon(imageVector = Settings_heart, contentDescription = "Localized description")
                         }
                     },
                     scrollBehavior = scrollBehavior,
@@ -108,15 +97,10 @@ fun HomeScreen (
                 BottomAppBar(
                     actions = {
                         IconButton(onClick = { navController.navigate(Graph(null)) }) {
-                            Icon(
-                                Icons.Filled.QueryStats,
-                                contentDescription = "Localized description")
+                            Icon(Query_stats, contentDescription = "Localized description")
                         }
                         IconButton(onClick = {navController.navigate(Home(null)) }) {
-                            Icon(
-                                Icons.Filled.Home,
-                                contentDescription = "Localized description",
-                            )
+                            Icon(Family_home, contentDescription = "Localized description")
                         }
                     },
                     floatingActionButton = {
@@ -125,7 +109,7 @@ fun HomeScreen (
                             containerColor = BottomAppBarDefaults.bottomAppBarFabColor,
                             elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation()
                         ) {
-                            Icon(Icons.Filled.EditNote, "Localized description")
+                            Icon(Edit_document, contentDescription = "Localized description")
                         }
                     }
                 )
@@ -142,19 +126,20 @@ fun HomeScreen (
                         .padding(5.dp)
                         .fillMaxWidth()
                 ){
-                    DateCard(null, Icons.Filled.CalendarMonth)
+                    DateCard(null, Calendar_month)
                     val yesterday = Calendar.getInstance()
-                        yesterday.add(Calendar.DATE, -1);
+                        yesterday.add(Calendar.DATE, -1)
                     val dayBeforeYesterday = Calendar.getInstance()
-                        dayBeforeYesterday.add(Calendar.DATE, -2);
-                    DateCard(SimpleDateFormat("dd").format(dayBeforeYesterday.time), null)
-                    DateCard(SimpleDateFormat("dd").format(yesterday.time), null)
-                    DateCard(SimpleDateFormat("dd").format(Date()), null)
+                        dayBeforeYesterday.add(Calendar.DATE, -2)
+                    DateCard(SimpleDateFormat("dd", Locale.UK).format(dayBeforeYesterday.time), null)
+                    DateCard(SimpleDateFormat("dd", Locale.UK).format(yesterday.time), null)
+                    DateCard(SimpleDateFormat("dd", Locale.UK).format(Date()), null)
                 }
                 TimeSlider()
             }
         }
 }
+
 @Composable
 fun DateCard(
     cardName: String?, icon: ImageVector?
@@ -169,7 +154,7 @@ fun DateCard(
     ) {
         if (cardName != null) {
             Text(
-                text = "${cardName}",
+                text = "$cardName",
                 modifier = Modifier
                     .height(85.dp)
                     .width(85.dp)
@@ -218,7 +203,7 @@ fun TimeSlider() {
                     interactionSource = interactionSource
                 ) {
                     Icon(
-                        imageVector = Icons.Filled.Schedule,
+                        imageVector = Schedule,
                         contentDescription = null,
                         modifier = Modifier.size(ButtonDefaults.IconSize),
                         //tint = Color.Red
@@ -227,5 +212,4 @@ fun TimeSlider() {
             }
         )
     }
-
 }

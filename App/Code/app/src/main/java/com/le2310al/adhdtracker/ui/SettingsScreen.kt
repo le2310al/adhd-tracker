@@ -3,11 +3,6 @@ package com.le2310al.adhdtracker.ui
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.*
-/*
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -17,8 +12,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
-
- */
+import com.le2310al.adhdtracker.ui.theme.Arrow_back
+import com.le2310al.adhdtracker.ui.theme.Settings_heart
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -26,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.le2310al.adhdtracker.Settings
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen (
     navController : NavHostController
@@ -45,7 +40,7 @@ fun SettingsScreen (
                 navigationIcon = {
                     IconButton(onClick = {navController.popBackStack()}) {
                         Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            Arrow_back,
                             contentDescription = "Localized description"
                         )
                     }
@@ -53,7 +48,7 @@ fun SettingsScreen (
                 actions = {
                     IconButton(onClick = { navController.navigate(Settings) }) {
                         Icon(
-                            imageVector = Icons.Filled.Settings,
+                            Settings_heart,
                             contentDescription = "Localized description"
                         )
                     }
