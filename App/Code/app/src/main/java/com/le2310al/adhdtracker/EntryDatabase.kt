@@ -8,5 +8,5 @@ import androidx.room.RoomDatabase
      version = 1
  )
 abstract class EntryDatabase: RoomDatabase() {
-    abstract val entryDao: EntryDao
+     abstract fun entryDao(): EntryDao
 }

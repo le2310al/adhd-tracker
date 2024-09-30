@@ -17,23 +17,26 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.le2310al.adhdtracker.EntryDao
+import com.le2310al.adhdtracker.EntryEvent
+import com.le2310al.adhdtracker.EntryState
+import com.le2310al.adhdtracker.EntryViewModel
 import com.le2310al.adhdtracker.Settings
 import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DiaryScreen (
-    navController : NavHostController
+    state: EntryState, viewModel: EntryViewModel = hiltViewModel(),
+    navController: NavHostController
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
     Scaffold(
@@ -45,9 +48,9 @@ fun DiaryScreen (
                     titleContentColor = MaterialTheme.colorScheme.primary,
                 ),
                 title = {
-                    val sdf =  SimpleDateFormat("dd MMM YYYY").format(Date())
                     Text(
-                        sdf,
+                        SimpleDateFormat("dd MMM yyyy", Locale.UK).format(Date()).toString(),
+
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
@@ -77,18 +80,22 @@ fun DiaryScreen (
                 .padding(innerPadding),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            DiaryTextField()
+            DiaryTextField(state, viewModel)
         }
     }
 }
 
 @Composable
-fun DiaryTextField() {
-    var text by remember { mutableStateOf("") }
+fun DiaryTextField(
+    state: EntryState,
+    viewModel : EntryViewModel
+) {
     TextField(
         modifier = Modifier.fillMaxSize(),
-        value = text,
-        onValueChange = { text = it },
-        label = { Text("How are you feeling today?") }
+        value = state.diary,
+        onValueChange = {
+            viewModel.onEvent(EntryEvent.AddDiary(it))
+        },
+        placeholder = { Text("How are you feeling today?") }
     )
 }

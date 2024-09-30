@@ -10,10 +10,12 @@ import kotlinx.coroutines.flow.Flow
 interface EntryDao {
     @Upsert
     suspend fun upsertEntry(entry: Entry)
+    /*
     @Delete
     suspend fun deleteEntry(entry: Entry)
     @Query("SELECT * FROM entry WHERE time = '2400'")
     fun getDailyEntries(entryDate: String): Flow<List<Entry>>
     @Query("SELECT * FROM entry WHERE time != '2400' ORDER BY date ASC, time ASC")
     fun getQuarterHourlyEntries(entryDate: String): Flow<List<Entry>>
+     */
 }
