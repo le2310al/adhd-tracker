@@ -1,11 +1,12 @@
-package com.le2310al.adhdtracker
+package com.le2310al.adhdtracker.data
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
 
- @Database(
+@Database(
      entities = [Entry::class],
-     version = 1
+     version = 1,
+    exportSchema = false
  )
 abstract class EntryDatabase: RoomDatabase() {
      abstract fun entryDao(): EntryDao

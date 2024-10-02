@@ -553,4 +553,45 @@ val Schedule: ImageVector
 
 private var schedule: ImageVector? = null
 
+public val Arrow_forward: ImageVector
+    get() {
+        if (arrowForward != null) {
+            return arrowForward!!
+        }
+        arrowForward = ImageVector.Builder(
+            name = "Arrow_forward",
+            defaultWidth = 24.dp,
+            defaultHeight = 24.dp,
+            viewportWidth = 960f,
+            viewportHeight = 960f
+        ).apply {
+            path(
+                fill = SolidColor(Color.Black),
+                fillAlpha = 1.0f,
+                stroke = null,
+                strokeAlpha = 1.0f,
+                strokeLineWidth = 1.0f,
+                strokeLineCap = StrokeCap.Butt,
+                strokeLineJoin = StrokeJoin.Miter,
+                strokeLineMiter = 1.0f,
+                pathFillType = PathFillType.NonZero
+            ) {
+                moveTo(647f, 520f)
+                horizontalLineTo(160f)
+                verticalLineToRelative(-80f)
+                horizontalLineToRelative(487f)
+                lineTo(423f, 216f)
+                lineToRelative(57f, -56f)
+                lineToRelative(320f, 320f)
+                lineToRelative(-320f, 320f)
+                lineToRelative(-57f, -56f)
+                close()
+            }
+        }.build()
+        return arrowForward!!
+    }
+
+private var arrowForward: ImageVector? = null
+
+
 

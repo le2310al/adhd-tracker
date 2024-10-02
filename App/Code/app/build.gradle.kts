@@ -80,6 +80,7 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.material3.window.size)
     implementation(libs.androidx.material3.adaptive.navigation.suite)
+    ksp(libs.androidx.room.compiler)
     /*
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.material3.adaptive)

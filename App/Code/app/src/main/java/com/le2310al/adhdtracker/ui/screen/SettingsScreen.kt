@@ -1,4 +1,4 @@
-package com.le2310al.adhdtracker.ui
+package com.le2310al.adhdtracker.ui.screen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
