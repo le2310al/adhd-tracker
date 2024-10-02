@@ -29,7 +29,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
@@ -43,7 +42,6 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.le2310al.adhdtracker.Diary
 import com.le2310al.adhdtracker.Graph
@@ -56,7 +54,6 @@ import com.le2310al.adhdtracker.ui.theme.Family_home
 import com.le2310al.adhdtracker.ui.theme.Query_stats
 import com.le2310al.adhdtracker.ui.theme.Schedule
 import com.le2310al.adhdtracker.ui.theme.Settings_heart
-import com.le2310al.adhdtracker.ui.viewmodel.EntryViewModel
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -66,10 +63,8 @@ import java.util.Locale
 @Composable
 fun HomeScreen (
     navController : NavHostController,
-    entryViewModel: EntryViewModel = hiltViewModel(),
 ) {
         val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
-        val allEntries by entryViewModel.entryUiState.collectAsState()
         Scaffold(
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
             topBar = {

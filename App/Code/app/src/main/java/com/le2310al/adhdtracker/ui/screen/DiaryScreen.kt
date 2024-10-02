@@ -1,6 +1,6 @@
 package com.le2310al.adhdtracker.ui.screen
 
-import android.icu.text.SimpleDateFormat
+import android.icu.util.Calendar
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -18,12 +18,8 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.style.TextOverflow
@@ -32,28 +28,25 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.le2310al.adhdtracker.Settings
-import com.le2310al.adhdtracker.data.Entry
-import com.le2310al.adhdtracker.ui.state.EntryUiState
+import com.le2310al.adhdtracker.ui.state.DiaryUiState
 import com.le2310al.adhdtracker.ui.theme.Arrow_back
 import com.le2310al.adhdtracker.ui.theme.Arrow_forward
 import com.le2310al.adhdtracker.ui.theme.Settings_heart
-import com.le2310al.adhdtracker.ui.viewmodel.DiaryViewModel
 import com.le2310al.adhdtracker.ui.viewmodel.EntryViewModel
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import java.util.Calendar
-import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DiaryScreen (
     navController: NavHostController,
     entryViewModel: EntryViewModel = hiltViewModel(),
-) {
-    val diaryUiState by diaryViewModel.uiState.collectAsStateWithLifecycle()
-    val data by entryViewModel.entryUiState.collectAsState()
-    val coroutineScope = rememberCoroutineScope()
+    ) {
+    val diaryState by entryViewModel.diaryState.collectAsStateWithLifecycle()
+    val entryState by entryViewModel.entryState.collectAsStateWithLifecycle()
+
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
+    entryViewModel.navigateEntries(entryState.entries, diaryState.calendar)
+    Log.i("INIT", diaryState.text)
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
@@ -64,7 +57,7 @@ fun DiaryScreen (
                 ),
                 title = {
                     Text(
-                        SimpleDateFormat("dd MMM yyyy", Locale.UK).format(diaryUiState.date.time).toString(),
+                        diaryState.date,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
@@ -93,26 +86,20 @@ fun DiaryScreen (
             BottomAppBar(
                 actions = {
                     IconButton(onClick = {
-                        val newDate = diaryUiState.date
-                        newDate.add(Calendar.DAY_OF_MONTH, -1)
-                        diaryViewModel.setDate(newDate)
-                        val diaryDateTime = java.text.SimpleDateFormat(
-                            "yyyyMMdd",
-                            Locale.UK
-                        ).format(diaryUiState.date.time).toString().plus("2400")
-                        Log.i("tag", diaryDateTime)
+                        //coroutineScope.launch {
+                            val newDate = diaryState.calendar
+                            newDate.add(Calendar.DAY_OF_MONTH, -1)
+                            entryViewModel.navigateEntries(entryState.entries, newDate)
+                        //}
                     }) {
                         Icon(Arrow_back, contentDescription = "Localized description")
                     }
                     IconButton(onClick = {
-                        val newDate = diaryUiState.date
-                        newDate.add(Calendar.DAY_OF_MONTH, 1)
-                        diaryViewModel.setDate(newDate)
-                        val diaryDateTime = java.text.SimpleDateFormat(
-                            "yyyyMMdd",
-                            Locale.UK
-                        ).format(diaryUiState.date.time).toString().plus("2400")
-                        Log.i("tag", diaryDateTime)
+                        //coroutineScope.launch {
+                            val newDate = diaryState.calendar
+                            newDate.add(Calendar.DAY_OF_MONTH, 1)
+                            entryViewModel.navigateEntries(entryState.entries, newDate)
+                        //}
                     }) {
                         Icon(Arrow_forward, contentDescription = "Localized description")
                     }
@@ -125,51 +112,88 @@ fun DiaryScreen (
                 .padding(innerPadding),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            DiaryTextField(coroutineScope, entryViewModel, data)
-
+            DiaryFieldText(diaryState)
         }
     }
 }
 
 @Composable
+fun DiaryFieldText(
+    diaryState: DiaryUiState,
+    entryViewModel: EntryViewModel = hiltViewModel(),
+    ) {
+    //val diaryState by diaryViewModel.uiState.collectAsStateWithLifecycle()
+    val coroutineScope = rememberCoroutineScope()
+    TextField(
+        modifier = Modifier.fillMaxSize(),
+        value = entryViewModel.text,
+        onValueChange = {
+            text -> entryViewModel.updateText(text)
+            coroutineScope.launch {
+                entryViewModel.saveEntry(diaryState.entryKey, text)
+            }
+        },
+        label = { Text("How are you feeling today?") }
+    )
+}
+/*
+@Composable
 fun DiaryTextField(
     coroutineScope: CoroutineScope,
+    diaryViewModel: DiaryViewModel,
     entryViewModel: EntryViewModel,
-    data: EntryUiState,
-    diaryViewModel: DiaryViewModel = hiltViewModel()
 ) {
-    val diary by diaryViewModel.uiState.collectAsStateWithLifecycle()
-    val diaryDateTime = java.text.SimpleDateFormat(
-        "yyyyMMdd",
-        Locale.UK
-    ).format(diary.date.time).toString().plus("2400")
-    val entry = data.entries.find {it.dateTime == diaryDateTime }
-    val text = entry?.text
-    if (text != null) {
-        var diaryEntry by remember { mutableStateOf(text) }
+    val diaryState by diaryViewModel.uiState.collectAsState()
+    //var text by remember { mutableStateOf(diaryViewModel.text) }
+    if (diaryViewModel.text.isEmpty()) {
         TextField(
             modifier = Modifier.fillMaxSize(),
-            value = diaryEntry,
+            value = diaryViewModel.text,
             onValueChange = {
-                diaryEntry = it
+                diaryViewModel.text = it
                 coroutineScope.launch {
-                    entryViewModel.saveEntry(Entry(diaryDateTime, diaryEntry))
+                    entryViewModel.saveEntry(diaryState.entryKey, diaryViewModel.text)
                 }
             },
             placeholder = { Text("How are you feeling today?") }
         )
     } else {
-        var diaryEntry by remember { mutableStateOf("") }
         TextField(
             modifier = Modifier.fillMaxSize(),
-            value = diaryEntry,
+            value = diaryViewModel.text,
             onValueChange = {
-                diaryEntry = it
+                diaryViewModel.text = it
                 coroutineScope.launch {
-                    entryViewModel.saveEntry(Entry(diaryDateTime, diaryEntry))
+                    entryViewModel.saveEntry(diaryState.entryKey, diaryViewModel.text)
                 }
             },
-            placeholder = { Text("How are you feeling today?") }
         )
     }
 }
+
+if (diaryState.text == null) {
+                var text by mutableStateOf("")
+                TextField(
+                    modifier = Modifier.fillMaxSize(),
+                    value = text,
+                    onValueChange = {
+                        text = it
+                        coroutineScope.launch {
+                            entryViewModel.saveEntry(diaryState.entryKey, text)
+                        }
+                    },
+                    placeholder = { Text("How are you feeling today?") }
+                )
+            } else {
+                TextField(
+                    modifier = Modifier.fillMaxSize(),
+                    value = diaryState.text!!,
+                    onValueChange = {
+                        diaryState.text = it
+                        coroutineScope.launch {
+                            entryViewModel.saveEntry(diaryState.entryKey, diaryState.text!!)
+                        }
+                    },
+                )
+            }
+ */
