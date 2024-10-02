@@ -31,6 +31,14 @@ class EntryViewModel @Inject constructor(private val entryRepository: EntryRepos
                 entryRepository.upsertEntry(entry)
             }
         }
+    /*
+    suspend fun retrieveDiary(dateTime : String) : String{
+        viewModelScope.launch {
+            return
+        }
+    }
+
+     */
 
     /*
     suspend fun getEntry(dateTime: String) {

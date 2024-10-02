@@ -29,10 +29,10 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.le2310al.adhdtracker.Settings
 import com.le2310al.adhdtracker.data.Entry
-import com.le2310al.adhdtracker.ui.state.DiaryUiState
 import com.le2310al.adhdtracker.ui.state.EntryUiState
 import com.le2310al.adhdtracker.ui.theme.Arrow_back
 import com.le2310al.adhdtracker.ui.theme.Arrow_forward
@@ -49,9 +49,8 @@ import java.util.Locale
 fun DiaryScreen (
     navController: NavHostController,
     entryViewModel: EntryViewModel = hiltViewModel(),
-    diaryViewModel: DiaryViewModel = hiltViewModel()
 ) {
-    val diaryUiState by diaryViewModel.uiState.collectAsState()
+    val diaryUiState by diaryViewModel.uiState.collectAsStateWithLifecycle()
     val data by entryViewModel.entryUiState.collectAsState()
     val coroutineScope = rememberCoroutineScope()
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
@@ -126,7 +125,7 @@ fun DiaryScreen (
                 .padding(innerPadding),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            DiaryTextField(coroutineScope, entryViewModel, data, diaryUiState)
+            DiaryTextField(coroutineScope, entryViewModel, data)
 
         }
     }
@@ -137,8 +136,9 @@ fun DiaryTextField(
     coroutineScope: CoroutineScope,
     entryViewModel: EntryViewModel,
     data: EntryUiState,
-    diary: DiaryUiState,
+    diaryViewModel: DiaryViewModel = hiltViewModel()
 ) {
+    val diary by diaryViewModel.uiState.collectAsStateWithLifecycle()
     val diaryDateTime = java.text.SimpleDateFormat(
         "yyyyMMdd",
         Locale.UK
