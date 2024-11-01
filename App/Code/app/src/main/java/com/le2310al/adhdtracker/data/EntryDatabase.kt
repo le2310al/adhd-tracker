@@ -1,9 +1,7 @@
-package com.le2310al.adhdtracker.data.database
+package com.le2310al.adhdtracker.data
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.le2310al.adhdtracker.data.database.dao.EntryDao
-import com.le2310al.adhdtracker.data.model.Entry
 
 @Database(
      entities = [Entry::class],

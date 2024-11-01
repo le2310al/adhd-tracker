@@ -1,0 +1,24 @@
+consistent cal/nav
+circle slider go previous month
+font size /style adjustable
+start screen opt into steaks/rewards/notifs, custom icons/time intervals/categories/trackers, always on text , theme 
+sound/haptic effects
+bold/underline text
+long press = specific diary entry 
+seperate apps
+graph only positive -> use filters
+multipe diary entries/day + titles 
+diary reflects mood colour
+graph monats überblick 
+
+community:
+anonymity
+blog post feed
+forum
+private chat friends -> virtual buddy play date
+
+virtual buddy:
+energy = timer
+task = treat
+music / white noise
+playdate

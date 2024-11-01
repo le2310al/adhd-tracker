@@ -1,0 +1,20 @@
+@startuml System Architecture
+skinparam componentStyle rectangle
+
+namespace AdhdCompanionApp.UI {
+   class UiElement
+   class ViewModel
+   class UiState
+}
+
+namespace AdhdCompanionApp.Domain {
+   class Module
+}
+
+namespace AdhdCompanionApp.Data {
+   class Repository
+   class Entity
+   class DAO
+   class DataBase
+}
+@enduml
