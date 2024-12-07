@@ -54,5 +54,4 @@ val AdhdTypography = Typography(
     labelSmall	= TextStyle(
         fontFamily = OpenDyslexic
     ),
-
 )

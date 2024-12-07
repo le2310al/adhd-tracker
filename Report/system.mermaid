@@ -1,0 +1,53 @@
+{
+    "theme": "base",
+        "themeVariables": {
+        "primaryColor": "#ccd0da",
+        "primaryTextColor": "#6c6f85",
+        "secondaryColor": "#eff1f5",
+        "tertiaryColor": "#eff1f5",
+        "tertiaryTextColor": "#4c4f69",
+        "lineColor": "#5c5f77"
+        }
+}
+
+flowchart LR
+    subgraph P [**Presentation Layer**]
+        direction LR
+        V[View]@{ shape: procs}
+        VM[View Model]@{ shape: procs}
+    end
+    subgraph M [**Model**]
+        direction LR
+        subgraph DO [**Domain Layer**]
+            direction LR
+            R[Repository]
+            %%M[Model]
+        end
+        subgraph DA [**Data Layer**]
+            direction LR
+            DB[Room Database]
+            DAO[DAO]
+            RI[Repository Implementation]
+            E[Entities]@{ shape: procs}
+        end
+    end
+    SQL[SQLite]@{ shape: cyl}
+
+
+V<--(1) Event ⇌ State--->VM
+VM<--(2) Request ⇌ Result--->R
+R<--(3) Request ⇌ Result--->RI
+RI<--(4a) Request ⇌ Database Object--->DB
+RI<--(5) Request + Database/Entity Objects ⇌ Entity Objects--->DAO
+DAO<--(6) Query ⇌ Result--->DB
+DB<--(7) Query ⇌ Result--->SQL
+DAO<--(8) Result ⇌ Entity Object--->E
+RI<--(4b) Request ⇌ Entity Objects--->E
+
+style V stroke: #ea76cb
+style VM stroke: #ea76cb
+style M stroke: #ea76cb
+
+style P stroke: #fe640b
+style DO stroke: #fe640b
+style DA stroke: #fe640b

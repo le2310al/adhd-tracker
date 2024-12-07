@@ -14,10 +14,12 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 @Module
 object DatabaseModule {
+   /*
     @Provides
     fun provideEntryDao(entryDatabase: EntryDatabase): EntryDao {
         return  entryDatabase.entryDao()
     }
+    */
 
     @Provides
     @Singleton
@@ -29,5 +31,10 @@ object DatabaseModule {
         )
             .fallbackToDestructiveMigration()
             .build()
+    }
+      @Provides
+    @Singleton
+    fun provideEntryRepository(db: entry_database): EntryRepository {
+        return EntryRepositoryImpl(db.dao)
     }
 }

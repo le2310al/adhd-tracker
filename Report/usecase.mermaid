@@ -1,0 +1,85 @@
+%%{init: {
+    'flowchart' : {'curve' : 'basis'},
+    "theme": "base",
+        "themeVariables": {
+        "primaryColor": "#ccd0da",
+        "primaryTextColor": "#6c6f85",
+        "secondaryColor": "#eff1f5",
+        "tertiaryColor": "#eff1f5",
+        "tertiaryTextColor": "#4c4f69",
+        "lineColor": "#5c5f77"
+        }
+}}%%
+
+flowchart TB
+    subgraph SET [**Setup Screen**]
+        direction TB
+        %%SET_START@{ shape: rounded, label: "User opens app" }
+        SET_NAME@{ shape: lean-r, label: "User inputs name" }
+        SET_MED@{ shape: lean-r, label: "User selects medication" }
+        %%SET_TWO@{ shape: rounded, label: "User swipes right" }
+        SET_PARA@{ shape: lean-r, label: "User selects/organises parameters to track" }
+        %%SET_THREE@{ shape: lean-r, label: "User swipes right" }
+        %%SET_THEME@{ shape: lean-r, label: "User selects theme/font" }
+        %%SET_OPT@{ shape: lean-r, label: "User opts into streaks/rewards" }
+        %%SET_FEED@{ shape: lean-r, label: "User opts into auditory/haptic feedback" }
+        %%SET_FOUR@{ shape: rounded, label: "User swipes right" }
+        %%SET_REM@{ shape: lean-r, label: "User sets reminders" }
+        %%SET_END@{ shape: rounded, label: "User finishes setup" }
+    end
+
+    %%SET_START-->SET_NAME-->SET_MED-->SET_TWO-->SET_PARA-->SET_THREE-->SET_THEME-->SET_OPT-->SET_FEED-->SET_FOUR-->SET_REM-->SET_END-->TRACK
+    SET_NAME-->SET_MED-->SET_PARA
+    %%style SET_START stroke: #40a02b
+    %%style SET_END stroke: #1e66f5
+
+    %%NAV@{ shape: rounded, label: "Navigation bar" }
+
+    subgraph MAIN [**Main Screens**]
+        direction LR
+        subgraph TRACK [**Tracker Screen**]
+            direction TB
+            TRACK_DATE@{ shape: rounded, label: "User sets date" }
+            TRACK_TIME@{ shape: rounded, label: "User sets time" }
+            TRACK_MOOD@{ shape: rounded, label: "User selects mood" }
+            TRACK_TRACK@{ shape: rounded, label: "User tracks parameters" }
+            
+        end
+
+        TRACK_DATE-->TRACK_TIME-->TRACK_MOOD-->TRACK_TRACK
+
+
+        subgraph DIARY [**Diary Screen**]
+            direction TB
+            DIARY_DATE@{ shape: rounded, label: "User selects date" }
+            DIARY_ENTRY@{ shape: docs, label: "User inputs diary entry with title" }
+        end
+
+        DIARY_DATE-->DIARY_ENTRY
+
+
+
+        subgraph GRAPH [**Graph Screen**]
+            direction TB
+            GRAPH_DATE@{ shape: rounded, label: "User selects date" }
+            GRAPH_FILTER@{ shape: rounded, label: "User filters parameters" }
+            GRAPH_PARA@{ shape: rounded, label: "User views parameter overview" }
+            GRAPH_MONTH@{ shape: rounded, label: "User views month overview" }
+        end
+    end
+
+    subgraph SETTINGS [**Settings Screen**]
+        direction TB
+        SETT_THEME@{ shape: lean-r, label: "User adjusts theme/font" }
+        %%SETT_NOTIF@{ shape: lean-r, label: "User adjusts notifications" }
+        %%SETT_EXP@{ shape: lean-r, label: "User exports data" }
+        
+    end
+
+    GRAPH_DATE-->GRAPH_FILTER-->GRAPH_PARA-->GRAPH_MONTH
+
+    SET-->MAIN
+    GRAPH<-->TRACK
+    TRACK<-->DIARY
+    GRAPH<-->DIARY
+    MAIN<-->SETTINGS
