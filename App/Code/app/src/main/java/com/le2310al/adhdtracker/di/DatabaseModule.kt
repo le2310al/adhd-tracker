@@ -2,8 +2,8 @@ package com.le2310al.adhdtracker.di
 
 import android.content.Context
 import androidx.room.Room
-import com.le2310al.adhdtracker.data.EntryDao
-import com.le2310al.adhdtracker.data.EntryDatabase
+import com.le2310al.adhdtracker.data.source.EntryDao
+import com.le2310al.adhdtracker.data.source.EntryDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

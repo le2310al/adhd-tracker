@@ -1,4 +1,4 @@
-package com.le2310al.adhdtracker.ui.viewmodel
+package com.le2310al.adhdtracker.presentation
 
 import android.icu.text.SimpleDateFormat
 import android.icu.util.Calendar
@@ -8,10 +8,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.le2310al.adhdtracker.data.Entry
-import com.le2310al.adhdtracker.data.EntryRepository
-import com.le2310al.adhdtracker.ui.state.DiaryUiState
-import com.le2310al.adhdtracker.ui.state.EntryUiState
+import com.le2310al.adhdtracker.domain.model.Entry
+import com.le2310al.adhdtracker.domain.repository.EntryRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -26,30 +24,29 @@ import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
-class EntryViewModel @Inject constructor(private val entryRepository: EntryRepository): ViewModel() {
-    val entryState: StateFlow<EntryUiState> =
-    entryRepository.getAllEntries()
-        .map { EntryUiState(it) }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000L),
-            initialValue = EntryUiState()
-        )
+class MainViewModel @Inject constructor(private val entryRepository: EntryRepository): ViewModel() {
+    val entries: StateFlow<AuxiliumState> =
+        entryRepository.getAllEntries().map { AuxiliumState(it) }
+            .stateIn(
+                viewModelScope,
+                SharingStarted.WhileSubscribed(5000L),
+                AuxiliumState()
+            )
 
-    suspend fun saveEntry(entryKey : String, text : String) {
+    fun saveEntry(key : String, text : String) {
         Log.i("SAVED", text)
-            viewModelScope.launch {
-                entryRepository.upsertEntry(Entry(entryKey, text))
-            }
+        viewModelScope.launch {
+            entryRepository.upsertEntry(Entry(key, text))
         }
+    }
 
-    private val _uiState = MutableStateFlow(DiaryUiState(
+    private val _uiState = MutableStateFlow(UiState(
         Calendar.getInstance(),
         SimpleDateFormat("dd MMM yyyy", Locale.UK).format(Date()).toString(),
         SimpleDateFormat("yyyyMMdd", Locale.UK).format(Date()).toString().plus("2400"),
-        entryState.value.entries.find { it.dateTime == SimpleDateFormat("yyyyMMdd", Locale.UK).format(Date()).toString().plus("2400") }?.text?:""
+        entries.value.entries.find { it.dateTime == SimpleDateFormat("yyyyMMdd", Locale.UK).format(Date()).toString().plus("2400") }?.diary?:""
     ))
-    val diaryState: StateFlow<DiaryUiState> =  _uiState.asStateFlow()
+    val uiState: StateFlow<UiState> =  _uiState.asStateFlow()
 
     var text by mutableStateOf("")
         private set
@@ -64,18 +61,18 @@ class EntryViewModel @Inject constructor(private val entryRepository: EntryRepos
                 calendar = nextEntry,
                 date = SimpleDateFormat("dd MM yyyy", Locale.UK).format(nextEntry.time)
                     .toString(),
-                entryKey = SimpleDateFormat("yyyyMMdd", Locale.UK).format(nextEntry.time)
+                key = SimpleDateFormat("yyyyMMdd", Locale.UK).format(nextEntry.time)
                     .toString().plus("2400"),
-                text = "",
+                diary = "",
             )
         }
-        val temp = entries.find { it.dateTime == _uiState.value.entryKey }
+        val temp = entries.find { it.dateTime == _uiState.value.key }
         if (temp != null) {
-            _uiState.value.text = temp.text.toString()
+            _uiState.value.diary = temp.diary.toString()
         } else {
-            _uiState.value.text = ""
+            _uiState.value.diary = ""
         }
-        updateText(_uiState.value.text)
-        _uiState.value.text.let { Log.i("DIARY UPDATE", it) }
+        updateText(_uiState.value.diary)
+        _uiState.value.diary.let { Log.i("DIARY UPDATE", it) }
     }
 }

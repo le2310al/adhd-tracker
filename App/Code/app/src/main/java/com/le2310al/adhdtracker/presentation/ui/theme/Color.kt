@@ -1,4 +1,4 @@
-package com.le2310al.adhdtracker.ui.theme
+package com.le2310al.adhdtracker.presentation.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

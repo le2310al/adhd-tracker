@@ -1,7 +1,7 @@
 package com.le2310al.adhdtracker.di
 
 import android.content.Context
-import com.le2310al.adhdtracker.AuxiliumApplication
+import com.le2310al.adhdtracker.AuxiliumApp
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,7 +14,7 @@ import javax.inject.Singleton
 object AppModule {
     @Singleton
     @Provides
-    fun provideBaseApplication(@ApplicationContext context: Context): AuxiliumApplication {
-        return context as AuxiliumApplication
+    fun provideBaseApplication(@ApplicationContext context: Context): AuxiliumApp {
+        return context as AuxiliumApp
     }
 }

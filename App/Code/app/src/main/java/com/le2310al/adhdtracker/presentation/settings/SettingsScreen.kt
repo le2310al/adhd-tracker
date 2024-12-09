@@ -1,4 +1,4 @@
-package com.le2310al.adhdtracker.ui.screen
+package com.le2310al.adhdtracker.presentation.settings
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,19 +12,25 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
-import com.le2310al.adhdtracker.ui.theme.Arrow_back
-import com.le2310al.adhdtracker.ui.theme.Settings_heart
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.le2310al.adhdtracker.Settings
+import com.le2310al.adhdtracker.presentation.AuxiliumState
+import com.le2310al.adhdtracker.presentation.MainViewModel
+import com.le2310al.adhdtracker.presentation.Settings
+import com.le2310al.adhdtracker.presentation.UiState
+import com.le2310al.adhdtracker.presentation.ui.theme.Arrow_back
+import com.le2310al.adhdtracker.presentation.ui.theme.Settings_heart
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen (
-    navController : NavHostController
+    navController: NavHostController,
+    vm: MainViewModel,
+    uiState: UiState,
+    entries: AuxiliumState
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
     Scaffold(

@@ -1,8 +1,7 @@
-package com.le2310al.adhdtracker.ui.theme
+package com.le2310al.adhdtracker.presentation.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBarItemColors
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
@@ -48,15 +47,15 @@ private val LightColorScheme = lightColorScheme(
 private val DarkColorScheme = darkColorScheme(
     primary = frappeBlue,
     onPrimary = frappeText,
-    //primaryContainer = primaryContainerLight,
+    primaryContainer = frappeSurface0,
     //onPrimaryContainer = frappeText,
     secondary = frappeGreen,
     onSecondary = frappeText,
-    //secondaryContainer = secondaryContainerLight,
+    secondaryContainer = frappeLavender,
     //onSecondaryContainer = frappeText,
     tertiary = frappeYellow,
     onTertiary = frappeText,
-    //tertiaryContainer = tertiaryContainerLight,
+    tertiaryContainer = frappeMauve,
     //nTertiaryContainer = frappeText,
     error = frappeRed,
     onError = frappeText,

@@ -1,10 +1,10 @@
-package com.le2310al.adhdtracker.ui.screen
+package com.le2310al.adhdtracker.presentation.graph
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import com.le2310al.adhdtracker.ui.theme.Settings_heart
-import com.le2310al.adhdtracker.ui.theme.Arrow_back
+import com.le2310al.adhdtracker.presentation.ui.theme.Settings_heart
+import com.le2310al.adhdtracker.presentation.ui.theme.Arrow_back
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -19,12 +19,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.le2310al.adhdtracker.Settings
+import com.le2310al.adhdtracker.presentation.AuxiliumState
+import com.le2310al.adhdtracker.presentation.MainViewModel
+import com.le2310al.adhdtracker.presentation.Settings
+import com.le2310al.adhdtracker.presentation.UiState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GraphScreen (
-    navController : NavHostController
+    navController: NavHostController,
+    vm: MainViewModel,
+    uiState: UiState,
+    entries: AuxiliumState
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
     Scaffold(

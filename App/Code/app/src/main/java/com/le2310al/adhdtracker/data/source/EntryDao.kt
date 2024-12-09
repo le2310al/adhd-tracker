@@ -1,8 +1,9 @@
-package com.le2310al.adhdtracker.data
+package com.le2310al.adhdtracker.data.source
 
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Upsert
+import com.le2310al.adhdtracker.domain.model.Entry
 import kotlinx.coroutines.flow.Flow
 
 @Dao
