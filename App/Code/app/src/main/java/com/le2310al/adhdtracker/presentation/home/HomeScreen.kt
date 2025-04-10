@@ -145,12 +145,6 @@ fun HomeScreen (
                     IconCard(vm,Nutrition, "Mood", "0")
                     IconCard(vm,Egg_alt, "Mood", "0")
                 }
-                /*
-                SSSlider()
-                SSSlider()
-                SSSlider()
-                SSSlider()
-                 */
             }
         }
 }
