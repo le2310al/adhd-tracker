@@ -4,8 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.runtime.getValue
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -21,29 +21,29 @@ import kotlinx.serialization.Serializable
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        val vm: MainViewModel by viewModels()
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             AdhdTrackerTheme {
                 val navController = rememberNavController()
-                val vm: MainViewModel = hiltViewModel()
                 val uiState by vm.uiState.collectAsStateWithLifecycle()
-                val entries by vm.entries.collectAsStateWithLifecycle()
                 NavHost(
                     navController = navController,
                     startDestination = Home(null)
                 ){
                     composable<Home> {
-                        HomeScreen(navController, vm, uiState, entries)
+                        HomeScreen(navController, vm, uiState)
                     }
+
                     composable<Graph> {
-                        GraphScreen(navController, vm, uiState, entries)
+                        GraphScreen(navController, vm)
                     }
                     composable<Diary> {
-                        DiaryScreen(navController,vm, uiState, entries)
+                        DiaryScreen(navController,vm, uiState)
                     }
                     composable<Settings> {
-                        SettingsScreen(navController,vm, uiState, entries)
+                        SettingsScreen(navController,vm)
                     }
                 }
             }

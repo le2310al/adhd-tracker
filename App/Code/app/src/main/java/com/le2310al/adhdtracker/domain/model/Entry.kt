@@ -6,5 +6,5 @@ import androidx.room.PrimaryKey
 @Entity
 data class Entry(
     @PrimaryKey val dateTime: String,
-    var diary: String?,
+    var parameters: Map<String, String>,
 )

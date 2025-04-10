@@ -1,11 +1,13 @@
 package com.le2310al.adhdtracker.presentation.diary
 
-import android.icu.util.Calendar
-import android.util.Log
+import android.annotation.SuppressLint
+import kotlinx.datetime.*
+import kotlinx.datetime.format.*
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.BottomAppBar
@@ -16,7 +18,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
@@ -26,13 +27,13 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.le2310al.adhdtracker.presentation.AuxiliumState
+import com.le2310al.adhdtracker.presentation.DiaryFieldText
+import com.le2310al.adhdtracker.presentation.DateCard
+import com.le2310al.adhdtracker.presentation.IconCard
 import com.le2310al.adhdtracker.presentation.Graph
 import com.le2310al.adhdtracker.presentation.Home
 import com.le2310al.adhdtracker.presentation.MainViewModel
 import com.le2310al.adhdtracker.presentation.UiState
-import com.le2310al.adhdtracker.presentation.home.DateCard
-import com.le2310al.adhdtracker.presentation.home.IconCard
 import com.le2310al.adhdtracker.presentation.ui.theme.Arrow_back
 import com.le2310al.adhdtracker.presentation.ui.theme.Calendar_month
 import com.le2310al.adhdtracker.presentation.ui.theme.Family_home
@@ -44,11 +45,8 @@ fun DiaryScreen (
     navController: NavHostController,
     vm: MainViewModel = hiltViewModel(),
     uiState: UiState,
-    entries: AuxiliumState,
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
-    vm.navigateEntries(entries.entries, uiState.calendar)
-    Log.i("INIT", uiState.diary)
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
@@ -59,7 +57,10 @@ fun DiaryScreen (
                 ),
                 title = {
                     Text(
-                        uiState.date,
+                        LocalDateTime.parse(uiState.key, LocalDateTime.Format { date (
+                            LocalDate.Format{year(); monthNumber(); dayOfMonth()}); time( LocalTime.Format { hour(); minute() })})
+                            .format(LocalDateTime.Format { date (LocalDate.Format{dayOfMonth(); char(' '); monthName(
+                                MonthNames.ENGLISH_ABBREVIATED); char(' '); year()})}),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
@@ -76,28 +77,6 @@ fun DiaryScreen (
                         )
                     }
                 },
-                /*actions = {
-                    IconButton(onClick = {
-                        //coroutineScope.launch {
-                        val newDate = uiState.calendar
-                        newDate.add(Calendar.DAY_OF_MONTH, -1)
-                        vm.navigateEntries(entries.entries, newDate)
-                        //}
-                    }) {
-                        Icon(Arrow_back, contentDescription = "Localized description")
-                    }
-                    IconButton(onClick = {
-                        //coroutineScope.launch {
-                        val newDate = uiState.calendar
-                        newDate.add(Calendar.DAY_OF_MONTH, 1)
-                        vm.navigateEntries(entries.entries, newDate)
-                        //}
-                    }) {
-                        Icon(Arrow_forward, contentDescription = "Localized description")
-                    }
-                },
-
-                 */
                 scrollBehavior = scrollBehavior,
             )
         },
@@ -125,97 +104,12 @@ fun DiaryScreen (
                     .padding(5.dp)
                     .fillMaxWidth()
             ){
-                val yesterday = Calendar.getInstance()
-                yesterday.add(Calendar.DATE, -1)
-                val dayBeforeYesterday = Calendar.getInstance()
-                dayBeforeYesterday.add(Calendar.DATE, -2)
-                IconCard(vm, uiState, entries, Calendar_month)
-                DateCard(vm, uiState, entries, dayBeforeYesterday, null)
-                DateCard(vm, uiState, entries, yesterday, null)
-                DateCard(vm, uiState, entries, Calendar.getInstance(), null)
+                IconCard(vm, Calendar_month, "cal", "0") //fix
+                DateCard(vm, null, -2)
+                DateCard(vm, null, -1)
+                DateCard(vm, null, 0)
             }
-            DiaryFieldText(uiState)
+            DiaryFieldText(vm, uiState)
         }
     }
 }
-
-@Composable
-fun DiaryFieldText(
-    uiState: UiState,
-    vm: MainViewModel = hiltViewModel(),
-) {
-    //val uiState by diaryViewModel.uiState.collectAsStateWithLifecycle()
-    //val coroutineScope = rememberCoroutineScope()
-    TextField(
-        modifier = Modifier.fillMaxSize(),
-        value = uiState.diary,
-        onValueChange = {
-                text -> vm.updateText(text)
-            //coroutineScope.launch {
-                vm.saveEntry(uiState.key, text)
-            //}
-        },
-        label = { Text("How are you feeling today?") }
-    )
-}
-/*
-@Composable
-fun DiaryTextField(
-    coroutineScope: CoroutineScope,
-    diaryViewModel: DiaryViewModel,
-    vm: EntryViewModel,
-) {
-    val uiState by diaryViewModel.uiState.collectAsState()
-    //var text by remember { mutableStateOf(diaryViewModel.text) }
-    if (diaryViewModel.text.isEmpty()) {
-        TextField(
-            modifier = Modifier.fillMaxSize(),
-            value = diaryViewModel.text,
-            onValueChange = {
-                diaryViewModel.text = it
-                coroutineScope.launch {
-                    vm.saveEntry(uiState.entryKey, diaryViewModel.text)
-                }
-            },
-            placeholder = { Text("How are you feeling today?") }
-        )
-    } else {
-        TextField(
-            modifier = Modifier.fillMaxSize(),
-            value = diaryViewModel.text,
-            onValueChange = {
-                diaryViewModel.text = it
-                coroutineScope.launch {
-                    vm.saveEntry(uiState.entryKey, diaryViewModel.text)
-                }
-            },
-        )
-    }
-}
-
-if (uiState.text == null) {
-                var text by mutableStateOf("")
-                TextField(
-                    modifier = Modifier.fillMaxSize(),
-                    value = text,
-                    onValueChange = {
-                        text = it
-                        coroutineScope.launch {
-                            vm.saveEntry(uiState.entryKey, text)
-                        }
-                    },
-                    placeholder = { Text("How are you feeling today?") }
-                )
-            } else {
-                TextField(
-                    modifier = Modifier.fillMaxSize(),
-                    value = uiState.text!!,
-                    onValueChange = {
-                        uiState.text = it
-                        coroutineScope.launch {
-                            vm.saveEntry(uiState.entryKey, uiState.text!!)
-                        }
-                    },
-                )
-            }
- */

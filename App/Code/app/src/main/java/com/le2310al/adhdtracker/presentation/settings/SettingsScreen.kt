@@ -13,11 +13,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.le2310al.adhdtracker.presentation.AuxiliumState
 import com.le2310al.adhdtracker.presentation.MainViewModel
 import com.le2310al.adhdtracker.presentation.Settings
 import com.le2310al.adhdtracker.presentation.UiState
@@ -29,8 +30,6 @@ import com.le2310al.adhdtracker.presentation.ui.theme.Settings_heart
 fun SettingsScreen (
     navController: NavHostController,
     vm: MainViewModel,
-    uiState: UiState,
-    entries: AuxiliumState
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
     Scaffold(

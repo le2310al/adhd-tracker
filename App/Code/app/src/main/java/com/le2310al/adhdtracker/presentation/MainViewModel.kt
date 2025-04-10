@@ -3,9 +3,6 @@ package com.le2310al.adhdtracker.presentation
 import android.icu.text.SimpleDateFormat
 import android.icu.util.Calendar
 import android.util.Log
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.le2310al.adhdtracker.domain.model.Entry
@@ -33,46 +30,34 @@ class MainViewModel @Inject constructor(private val entryRepository: EntryReposi
                 AuxiliumState()
             )
 
-    fun saveEntry(key : String, text : String) {
-        Log.i("SAVED", text)
-        viewModelScope.launch {
-            entryRepository.upsertEntry(Entry(key, text))
-        }
-    }
-
     private val _uiState = MutableStateFlow(UiState(
-        Calendar.getInstance(),
-        SimpleDateFormat("dd MMM yyyy", Locale.UK).format(Date()).toString(),
-        SimpleDateFormat("yyyyMMdd", Locale.UK).format(Date()).toString().plus("2400"),
-        entries.value.entries.find { it.dateTime == SimpleDateFormat("yyyyMMdd", Locale.UK).format(Date()).toString().plus("2400") }?.diary?:""
+        SimpleDateFormat("yyyyMMdd", Locale.UK).format(Date()).toString().plus("0000"),
+        entries.value.entries.find { it.dateTime == SimpleDateFormat("yyyyMMdd", Locale.UK).format(Date())
+            .toString().plus("0000") }?.parameters ?:mapOf("Diary" to "")
     ))
     val uiState: StateFlow<UiState> =  _uiState.asStateFlow()
 
-    var text by mutableStateOf("")
-        private set
-
-    fun updateText(input: String) {
-        text = input
-    }
-
-    fun navigateEntries(entries : List<Entry>, nextEntry : Calendar) {
+    fun setCurrentEntry (cal: Calendar, entry: Entry?) {
         _uiState.update { currentState ->
             currentState.copy(
-                calendar = nextEntry,
-                date = SimpleDateFormat("dd MM yyyy", Locale.UK).format(nextEntry.time)
-                    .toString(),
-                key = SimpleDateFormat("yyyyMMdd", Locale.UK).format(nextEntry.time)
-                    .toString().plus("2400"),
-                diary = "",
+                key = SimpleDateFormat("yyyyMMdd", Locale.UK).format(cal.time) .toString().plus("0000"),
+                parameters = entry?.parameters?:mapOf("Diary" to "")
             )
         }
-        val temp = entries.find { it.dateTime == _uiState.value.key }
-        if (temp != null) {
-            _uiState.value.diary = temp.diary.toString()
-        } else {
-            _uiState.value.diary = ""
+        Log.i("PARAMS", _uiState.value.parameters.toString())
+    }
+
+    fun setParameterValue(key : String, value : String) {
+        val parameters = mutableMapOf<String, String>()
+        parameters.putAll(_uiState.value.parameters)
+        parameters[key] = value
+        _uiState.update { currentState ->
+            currentState.copy(
+                parameters = parameters,
+            )
         }
-        updateText(_uiState.value.diary)
-        _uiState.value.diary.let { Log.i("DIARY UPDATE", it) }
+        viewModelScope.launch {
+            entryRepository.upsertEntry(Entry(uiState.value.key, parameters))
+        }
     }
 }
